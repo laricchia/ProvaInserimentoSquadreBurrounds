@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,6 +28,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Random;
 
 public class SquadraDetailComposta extends ActionBarActivity implements android.view.View.OnClickListener {
 
@@ -70,21 +73,52 @@ public class SquadraDetailComposta extends ActionBarActivity implements android.
             giocatore.giocatore_ID = _Giocatore_Id;
 
 
+            //ROB - LEGGI COMMENTO RELATIVO ALLA FUNZIONE GETGIOCATORELIST
             ArrayList<HashMap<String, String>> giocatoreList = repo1.getGiocatoreList();
 
-            if(giocatoreList.size()>1)
+            Log.w("SQUADRADETAIL", giocatoreList.toString());
 
-            {
+
+
+            if(giocatoreList.size()>1)  {
+
+                int random1;
+                int random2;
+
+                if (giocatoreList.size() == 2) {
+                    random1 = 0;
+                    random2 = 1;
+                } else {
+                    Random generator = new Random();
+                    random1 = generator.nextInt(giocatoreList.size());
+                    do {
+                        random2 = generator.nextInt(giocatoreList.size());
+                    } while (random2 == random1);
+                }
+
+
+
+
+
+                //ROB - A CHE SERVE QUESTO IF???
                 if (_Giocatore_Id == 0) {
 
                    //devo ottenere il nome del giocatore e poi lo cancello
 
+                    /*ROB - COSÌ STAI CERCANDO IL GIOCATORE CON L'ID 0, NON UNO DALLA LISTA
                     giocatore = repo1.getGiocatoreById(_Giocatore_Id);
                     String nome1= giocatore.name_GIOCATORE;
                     repo1.delete(_Giocatore_Id);
+                    */
+
+                    //ROB - CORREZIONE
+
 
                     // devo ottenere il nome del secondo giocatore e poi lo cancello
 
+                    //ROB - DOVE LANCI QUESTO INTENT2?
+
+                    /*
                     _Giocatore_Id = 0;
                     Intent intent2 = getIntent();
                     _Giocatore_Id = intent2.getIntExtra("giocatore_Id", 0);
@@ -96,10 +130,24 @@ public class SquadraDetailComposta extends ActionBarActivity implements android.
                     String nome2= giocatore2.name_GIOCATORE;
 
                     repo2.delete(_Giocatore_Id);
+                    */
 
+                    String nome1 = giocatoreList.get(random1).get("name");
+                    String nome2 = giocatoreList.get(random2).get("name");
+
+
+
+                    //ROB - DAI NOMI PIÙ CHIARI
+                    GiocatoreRepo repo2 = new GiocatoreRepo(this);
+
+
+                    //ROB - MECCANISMO CHE SINCERAMENTE FA SCHIFO <3
+                    repo2.delete(Integer.parseInt(giocatoreList.get(random1).get("id")));
+                    repo2.delete(Integer.parseInt(giocatoreList.get(random2).get("id")));
 
 
                     //devo creare il nome della squadra con i nomi combinati es. Luca-Giacomo
+
 
 
 
@@ -113,14 +161,11 @@ public class SquadraDetailComposta extends ActionBarActivity implements android.
                     Toast.makeText(this, "New Squadra Insert", Toast.LENGTH_SHORT).show();
                 }
 
-
-
-
-                else {
-                    Toast.makeText(this,"Nessuna coppia con cui comporre una squadra!", Toast.LENGTH_SHORT).show();
                 }
-
-                }
+            //ROB - IF SPOSTATO, INDENTA MEGLIO IL CODICE
+            else {
+                Toast.makeText(this,"Nessuna coppia con cui comporre una squadra!", Toast.LENGTH_SHORT).show();
+            }
             }
 
     }

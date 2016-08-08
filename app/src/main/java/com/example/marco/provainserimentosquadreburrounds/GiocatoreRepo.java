@@ -50,6 +50,7 @@ public class GiocatoreRepo {
         db.close(); // Closing database connection
     }
 
+    //ROB - CAMBIA LA STRUTTURA DATI...SE L'ID È UN INTERO, PERCHÈ USI UNA STRINGA????
     public ArrayList<HashMap<String, String>> getGiocatoreList() {
         //Open connection to read only
         SQLiteDatabase db = dbHelper.getReadableDatabase();
